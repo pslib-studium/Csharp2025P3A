@@ -54,8 +54,24 @@ namespace c02manyToMany.Service
                     query = query.Skip(skip).Take(size.Value);
                 }
             }
-            return query.ToList();
-            
+            return query.ToList();         
+        }
+        public Movie? Get(int id)
+        {
+            var item = _context.Movies
+                .Where(m => m.MovieId == id)
+                .SingleOrDefault();
+            //.First() - _1,2,3,
+            //.FirstOrDefault(); - 0
+            //.Last()
+            //.LastOrDefault();
+            //.Single() - 1
+            //.SingleOrDefault() - 0,1
+            //.Query()
+            //.ToList()
+            //.ToArray();
+            //if (item == null) return 404;
+            return item;
         }
     }
 
