@@ -10,7 +10,7 @@ context.Database.EnsureCreated();
 Console.WriteLine("Database created!");
 var repo = new MovieRepository(context);
 
-List<Movie> movies = repo.GetAllMovies(null, 2010);
+List<Movie> movies = repo.GetAllMovies(null, null, MovieSort.None);
 
 foreach (var movie in movies)
 {

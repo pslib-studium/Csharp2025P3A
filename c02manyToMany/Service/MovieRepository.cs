@@ -17,7 +17,13 @@ namespace c02manyToMany.Service
             _context = context ??= new ApplicationDbContext();
         }
 
-        public List<Movie> GetAllMovies(string? title, int? sinceYear)
+        public List<Movie> GetAllMovies(
+            string? title, 
+            int? sinceYear, 
+            MovieSort order = MovieSort.None,
+            int? page = null,
+            int? size = null
+            )
         {
             IQueryable<Movie> query = _context.Movies;
             // filtry
@@ -29,7 +35,36 @@ namespace c02manyToMany.Service
             {
                 query = query.Where(m => m.ReleaseYear >= sinceYear.Value);
             }
+            // řazení
+            query = order switch
+            {
+                MovieSort.TitleAsc => query.OrderBy(m => m.Title),
+                MovieSort.TitleDesc => query.OrderByDescending(m => m.Title),
+                MovieSort.YearAsc => query.OrderBy(m => m.ReleaseYear),
+                MovieSort.YearDesc => query.OrderByDescending(m => m.ReleaseYear),
+                _ => query // bez řazení = default
+            };
+            int count = query.Count();
+            // stránkování
+            if (page.HasValue && size.HasValue && page > 0 && size > 0)
+            {
+                int skip = (page.Value - 1) * size.Value;
+                if (skip < count)
+                {
+                    query = query.Skip(skip).Take(size.Value);
+                }
+            }
             return query.ToList();
+            
         }
+    }
+
+    enum MovieSort
+    {
+        None,
+        TitleAsc,
+        TitleDesc,
+        YearAsc,
+        YearDesc
     }
 }
