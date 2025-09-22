@@ -28,12 +28,27 @@ namespace c02manyToMany.Data
             {
                 ent.HasMany(a => a.Movies)
                    .WithMany(m => m.Artists)
-                   .UsingEntity<MovieArtist>();
-                ent.HasData(
-                    quent,
-                    pitt,
-                    leo
-                );
+                   .UsingEntity<MovieArtist>(
+                       j => j.HasOne(ma => ma.Movie)
+                             .WithMany()
+                             .HasForeignKey(ma => ma.MovieId)
+                             .OnDelete(DeleteBehavior.Cascade),
+                       j => j.HasOne(ma => ma.Artist)
+                             .WithMany()
+                             .HasForeignKey(ma => ma.ArtistId)
+                             .OnDelete(DeleteBehavior.Cascade),
+                       j =>
+                       {
+                           j.HasKey(ma => new { ma.MovieId, ma.ArtistId });
+
+                           j.HasData(
+                               new MovieArtist { MovieId = outhId, ArtistId = qtId },
+                               new MovieArtist { MovieId = outhId, ArtistId = bpId },
+                               new MovieArtist { MovieId = outhId, ArtistId = ldId }
+                           );
+                       }
+                   );
+                ent.HasData(quent, pitt, leo);
             });
             modelBuilder.Entity<Movie>(ent =>
             {
@@ -41,15 +56,6 @@ namespace c02manyToMany.Data
                     outh,
                     new Movie { MovieId = 2, Title = "Inglourious Basterds", ReleaseYear = 2009 },
                     new Movie { MovieId = 3, Title = "Django Unchained", ReleaseYear = 2012 }
-                );
-            });
-            modelBuilder.Entity<MovieArtist>(ent =>
-            {
-                ent.HasKey(ma => new { ma.MovieId, ma.ArtistId });
-                ent.HasData(
-                    new MovieArtist { MovieId = outhId, ArtistId = qtId },
-                    new MovieArtist { MovieId = outhId, ArtistId = bpId },
-                    new MovieArtist { MovieId = outhId, ArtistId = ldId }
                 );
             });
         }
