@@ -19,5 +19,7 @@ namespace c02manyToMany.Models
         public int ArtistId { get; set; }
 
         public Artist Artist { get; set; } = null!;
+        public RoleKind Kind { get; set; } = 0;
+        public string? RoleName { get; set; }
     }
 }

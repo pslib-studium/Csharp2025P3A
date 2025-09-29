@@ -1,5 +1,6 @@
 ﻿using c02manyToMany.Data;
 using c02manyToMany.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,9 @@ namespace c02manyToMany.Service
             int? size = null
             )
         {
-            IQueryable<Movie> query = _context.Movies;
+            IQueryable<Movie> query = _context.Movies
+                //.Include(m => m.Artists)
+                .Include(m => m.Roles).ThenInclude(ma => ma.Artist);
             // filtry
             if (!String.IsNullOrEmpty(title))
             {

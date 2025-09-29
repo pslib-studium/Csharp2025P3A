@@ -20,10 +20,13 @@ namespace c02manyToMany.Data
             const int bpId = 2;
             const int ldId = 3;
             const int outhId = 1;
+            const int ibId = 2;
             Artist quent = new() { ArtistId = qtId, FirstName = "Quentin", LastName = "Tarantino" };
             Artist pitt = new() { ArtistId = bpId, FirstName = "Brad", LastName = "Pitt" };
             Artist leo = new() { ArtistId = ldId, FirstName = "Leonardo", LastName = "DiCaprio" };
             Movie outh = new() { MovieId = outhId, Title = "Once Upon a Time in Hollywood", ReleaseYear = 2019 };
+            Movie ib = new() { MovieId = ibId, Title = "Inglourious Basterds", ReleaseYear = 2009 };
+
             modelBuilder.Entity<Artist>(ent =>
             {
                 ent.HasMany(a => a.Movies)
@@ -44,7 +47,14 @@ namespace c02manyToMany.Data
                            j.HasData(
                                new MovieArtist { MovieId = outhId, ArtistId = qtId },
                                new MovieArtist { MovieId = outhId, ArtistId = bpId },
-                               new MovieArtist { MovieId = outhId, ArtistId = ldId }
+                               new MovieArtist { MovieId = outhId, ArtistId = ldId },
+                               new MovieArtist { 
+                                   MovieId = ibId, 
+                                   ArtistId = bpId, 
+                                   Kind = RoleKind.Actor, 
+                                   RoleName = "Aldo Rein" 
+                               }
+
                            );
                        }
                    );
@@ -54,7 +64,7 @@ namespace c02manyToMany.Data
             {
                 ent.HasData(
                     outh,
-                    new Movie { MovieId = 2, Title = "Inglourious Basterds", ReleaseYear = 2009 },
+                    ib,
                     new Movie { MovieId = 3, Title = "Django Unchained", ReleaseYear = 2012 }
                 );
             });

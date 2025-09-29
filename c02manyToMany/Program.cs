@@ -15,4 +15,8 @@ List<Movie> movies = repo.GetAllMovies(null, null, MovieSort.None,2,1);
 foreach (var movie in movies)
 {
     Console.WriteLine($"{movie.Title} ({movie.ReleaseYear})");
+    foreach (var role in movie.Roles)
+    {
+        Console.WriteLine($"   {role.Artist.FirstName} {role.Artist.LastName} ({role.Kind})");
+    }
 }
